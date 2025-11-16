@@ -17,9 +17,15 @@ class User extends Authenticatable
         'password',
         'profilePicture',
         'role',
-        'registrationDate',
         'phoneNumber',
         'isActive',
+    ];
+
+    protected $attributes = [
+        'profilePicture' => 'default_profile.png',
+        'role' => 'registeredUser',              
+        'isActive' => true,                      
+        'phoneNumber' => null,                   
     ];
 
     protected $hidden = [
@@ -30,7 +36,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'role' => UserRole::class, // Cast to Enum
+        'role' => UserRole::class,
         'registrationDate' => 'date',
         'isActive' => 'boolean',
     ];

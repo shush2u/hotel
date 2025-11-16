@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -21,6 +23,50 @@ class UserController extends Controller
     public function create()
     {
         //
+    }
+
+    /**
+     * Handle user creation
+     */
+    public function register(Request $request)
+    {
+        $userData = $request->validate([
+            'fullName' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+            'phoneNumber' => ['required', 'string'],
+        ]);
+
+        $userData['password'] = bcrypt($userData['password']);
+
+        $user = User::create($userData);
+
+        Auth::login($user);
+
+        return redirect()->route('home');
+    }
+
+    /**
+     * Handle an authentication attempt.
+     */
+    public function authenticate(Request $request): RedirectResponse
+    {
+
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/');
+
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+
     }
 
     /**

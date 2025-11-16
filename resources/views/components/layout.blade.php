@@ -27,7 +27,7 @@
 
             <hr class="h-px my-4 bg-neutral-200 border-0">
             
-            <main class="grow"> 
+            <main class="grow flex flex-col"> 
                 @yield('content')
             </main>
 

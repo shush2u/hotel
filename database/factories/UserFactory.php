@@ -20,7 +20,6 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'profilePicture' => fake()->imageUrl(200, 200, 'people'),
             'role' => UserRole::REGISTERED_USER, // Default to registered user
-            'registrationDate' => fake()->dateTimeThisDecade(),
             'phoneNumber' => fake()->phoneNumber(),
             'isActive' => true,
             'remember_token' => Str::random(10),

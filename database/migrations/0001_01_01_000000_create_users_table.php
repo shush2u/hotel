@@ -13,10 +13,9 @@ return new class extends Migration
             $table->string('fullName');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password'); // Corresponds to passwordHash
+            $table->string('password');
             $table->string('profilePicture')->nullable();
-            $table->string('role')->default('registeredUser'); // Uses 'registeredUser' from enum
-            $table->date('registrationDate');
+            $table->string('role')->default('registeredUser');
             $table->string('phoneNumber')->nullable();
             $table->boolean('isActive')->default(true);
             $table->rememberToken();
