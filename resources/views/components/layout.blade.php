@@ -19,10 +19,23 @@
             </style>
         @endif
     </head>
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-white flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+    <body class="bg-linear-to-r from-brand-500 to-brand-700 text-neutral-950 flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
 
-        <h1>Five Star</h1>
-        <h2>IF-3/1 Arnas Šiūša</h2>
+        <div class="bg-neutral-100 p-6 rounded-md shadow-md min-h-[90vh] w-3/4 flex flex-col h-full"> 
+            
+            <x-header/>
+
+            <hr class="h-px my-4 bg-neutral-200 border-0">
+            
+            <main class="grow"> 
+                @yield('content')
+            </main>
+
+            <hr class="h-px my-4 bg-neutral-200 border-0">
+            
+            <x-footer/>
+
+        </div>
 
     </body>
 </html>
