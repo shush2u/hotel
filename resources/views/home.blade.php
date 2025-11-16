@@ -1,7 +1,7 @@
 @extends('components/layout')
 
 @section('content')
-    <div class="bg-white p-6 rounded-md shadow-md grow">
+    <div class="bg-white p-6 rounded-sm shadow-md grow">
   
         <h3 class="text-lg">Content Title</h3>
         

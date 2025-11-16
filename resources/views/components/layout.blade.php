@@ -21,7 +21,7 @@
     </head>
     <body class="bg-linear-to-r from-brand-500 to-brand-700 text-neutral-950 flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
 
-        <div class="bg-neutral-100 p-6 rounded-md shadow-md min-h-[90vh] w-3/4 flex flex-col h-full"> 
+        <div class="bg-neutral-100 p-6 rounded-sm shadow-md min-h-[90vh] w-3/4 flex flex-col h-full"> 
             
             <x-header/>
 

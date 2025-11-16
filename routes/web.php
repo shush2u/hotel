@@ -33,3 +33,11 @@ Route::post('logout', function () {
 Route::view('register', 'register')->name('register');
 
 Route::post('register', [UserController::class, 'register'])->name('register.attempt');
+
+// Statistics
+
+Route::view('statistics', 'statistics')->name('statistics');
+
+// Room Bookings
+
+Route::view('myBookings', 'myBookings')->name('myBookings');
