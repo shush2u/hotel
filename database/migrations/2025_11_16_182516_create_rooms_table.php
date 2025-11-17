@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->boolean('tv')->default(false);
             $table->boolean('wifi')->default(false);
+            $table->string('photo');
             $table->timestamps();
         });
     }

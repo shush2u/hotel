@@ -22,6 +22,15 @@
                 </button>
             
             </form>
+
+            <form method="GET" action="{{ route('reviews') }}">
+                
+                <button class="cursor-pointer flex items-center gap-2 rounded-sm border border-transparent py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-neutral-600 hover:text-white hover:bg-brand-600 focus:text-white focus:bg-brand-600 active:border-brand-500 active:text-white active:bg-brand-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="submit">
+                    <x-lucide-user-star class="w-5 h-5"/>
+                    Reviews
+                </button>
+            
+            </form>
             
             @if (Auth::check() && Auth::user()->role->value === 'administrator')
 

@@ -3,9 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Enums\RoomType; // Import enum
-use App\Models\Room;
-use App\Models\RoomPhoto;
+use App\Enums\RoomType;
 
 class RoomFactory extends Factory
 {
@@ -17,20 +15,8 @@ class RoomFactory extends Factory
             'costPerNight' => fake()->randomFloat(2, 70, 350),
             'description' => fake()->paragraph(),
             'tv' => fake()->boolean(),
-            'wifi' => fake()->boolean(true), // Most rooms have wifi
+            'wifi' => fake()->boolean(true),
+            'photo' => 'https://placehold.co/600x400/orange/white?text=placeholder',
         ];
-    }
-
-    /**
-     * Configure the model factory.
-     */
-    public function configure(): static
-    {
-        return $this->afterCreating(function (Room $room) {
-            // Create 1 to 5 photos for this room
-            RoomPhoto::factory()
-                ->count(rand(1, 5))
-                ->create(['room_id' => $room->id]);
-        });
     }
 }

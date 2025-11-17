@@ -54,10 +54,14 @@ Route::post('register', [UserController::class, 'register'])->name('register.att
 
 Route::view('statistics', 'statistics')->name('statistics');
 
-// Rooms
+// Room
 
-Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
+Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
 
 // Room Bookings
 
 Route::view('myBookings', 'myBookings')->name('myBookings');
+
+// Room Bookings
+
+Route::view('reviews', 'reviews')->name('reviews');

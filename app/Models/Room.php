@@ -18,6 +18,7 @@ class Room extends Model
         'description',
         'tv',
         'wifi',
+        'photo'
     ];
 
     protected $casts = [
@@ -33,14 +34,6 @@ class Room extends Model
     public function roomBookings()
     {
         return $this->hasMany(RoomBooking::class);
-    }
-
-    /**
-     * Get the photos for the room.
-     */
-    public function roomPhotos()
-    {
-        return $this->hasMany(RoomPhoto::class);
     }
 
     /**

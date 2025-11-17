@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class RoomController extends Controller
 {
@@ -36,11 +37,11 @@ class RoomController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified room.
      */
     public function show(Room $room)
     {
-        //
+        return view('rooms.show', compact('room'));
     }
 
     /**
