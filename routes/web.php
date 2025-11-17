@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\RoomBookingController;
 use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -57,6 +58,8 @@ Route::view('statistics', 'statistics')->name('statistics');
 // Room
 
 Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
+
+Route::post('/rooms/{room}/book', [RoomBookingController::class, 'store'])->name('bookings.store');
 
 // Room Bookings
 

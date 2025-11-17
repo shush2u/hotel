@@ -49,8 +49,8 @@ class Room extends Model
     {
         return $query->whereDoesntHave('roomBookings', function (Builder $bookingQuery) use ($fromDate, $toDate) {
             $bookingQuery->where(function ($q) use ($fromDate, $toDate) {
-                $q->where('check_in_date', '<', $toDate); 
-                $q->where('check_out_date', '>', $fromDate);
+                $q->where('fromDate', '<', $toDate); 
+                $q->where('toDate', '>', $fromDate);
             });
         });
     }

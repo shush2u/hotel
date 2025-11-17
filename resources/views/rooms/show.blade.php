@@ -13,12 +13,16 @@
             </a>
         </div>
 
-        <h1 class="text-3xl font-extrabold text-brand-600 mb-4">Room #{{ $room->roomNumber }}</h1>
-        <span class="text-sm font-semibold text-brand-600 bg-brand-100 px-3 py-1 rounded-sm">
-            {{ ucwords($room->roomType->value) }}
-        </span>
+        <div class="flex gap-4 items-center">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+            <h1 class="text-3xl font-extrabold text-brand-600">Room #{{ $room->roomNumber }}</h1>
+            <span class="text-sm font-semibold text-brand-600 bg-brand-100 px-3 py-1 rounded-sm">
+                {{ ucwords($room->roomType->value) }}
+            </span>
+
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
 
             <!-- COLUMN 1: Room Photo -->
             <div class="md:order-1 order-1">
@@ -83,47 +87,121 @@
                     </ul>
                 </div>
 
-                <form method="GET" action="{{ route('home') }}" class="space-y-6">
-                    @csrf
+                @auth
 
-                    <div class="flex flex-row items-center justify-between gap-4">
+                    <form method="POST" action="{{ route('bookings.store', $room) }}" class="space-y-6">
+                        @csrf
 
-                        <div>
-                            <label for="fromDate" class="block text-sm font-medium text-neutral-700 mb-1">From Date</label>
-                            <input id="fromDate" name="fromDate" type="date" autocomplete="fromDate"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:ring-blue-500 focus:border-blue-500 @error('fromDate') border-red-500 @enderror"
-                                placeholder="you@example.com" />
-                            @error('fromDate')
-                                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <div class="flex flex-row items-center justify-between gap-4">
 
-                        <div>
-                            <label for="toDate" class="block text-sm font-medium text-neutral-700 mb-1">To Date</label>
-                            <input id="toDate" name="toDate" type="date" autocomplete="toDate"
-                                class="w-full px-4 py-2 border border-neutral-300 rounded-sm
-                        placeholder="you@example.com" />
-                            @error('toDate')
-                                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                            <div>
+                                <label for="fromDate" class="block text-sm font-medium text-neutral-700 mb-1">From Date</label>
+                                <input id="fromDate" name="fromDate" type="date" required
+                                    value="{{ old('fromDate', request('fromDate')) }}"
+                                    class="w-full px-3 py-2 border rounded-sm @error('fromDate') border-red-500 @else border-neutral-300 @enderror focus:ring-blue-500 focus:border-blue-500" />
+                                @error('fromDate')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                        <div>
-                            <div class="h-lh"></div>
-                            <button type="submit"
-                                class="cursor-pointer w-full flex items-center gap-2 py-2 px-4 border border-transparent rounded-sm shadow-sm text-lg font-medium text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-                                <x-lucide-notebook-pen class="w-5 h-5" />
-                                Book this room
-                            </button>
+                            <div>
+                                <label for="toDate" class="block text-sm font-medium text-neutral-700 mb-1">To Date</label>
+                                <input id="toDate" name="toDate" type="date" required
+                                    value="{{ old('toDate', request('toDate')) }}"
+                                    class="w-full px-3 py-2 border rounded-sm @error('toDate') border-red-500 @else border-neutral-300 @enderror focus:ring-blue-500 focus:border-blue-500" />
+                                @error('toDate')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <div class="h-lh"></div>
+                                <button type="submit"
+                                    class="cursor-pointer w-full h-10 flex items-center gap-2 py-2 px-4 border border-transparent rounded-sm shadow-sm text-lg font-medium text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                                    <x-lucide-notebook-pen class="w-5 h-5" />
+                                    Book
+                                </button>
+                                @if ($errors->any())
+                                    <div class="h-[2lh]"></div>
+                                @enderror
                         </div>
 
                     </div>
 
                 </form>
 
-            </div>
+            @endauth
+
+            @guest
+
+                <button disabled
+                    class="w-full flex items-center justify-center gap-2 py-2 px-4 border rounded-sm shadow-sm text-lg font-medium text-brand-800 border-brand-300 bg-brand-100">
+                    <x-lucide-notebook-pen class="w-5 h-5" />
+                    Log in to book this room
+                </button>
+
+            @endguest
 
         </div>
 
     </div>
+
+    @if (session()->has('success'))
+        <el-dialog>
+            <dialog id="booking-success-modal" aria-labelledby="dialog-title" open
+                class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
+                <el-dialog-backdrop
+                    class="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"></el-dialog-backdrop>
+
+                <div tabindex="0"
+                    class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
+
+                    <el-dialog-panel
+                        class="relative transform overflow-hidden rounded-sm bg-neutral-100 shadow-xl outline -outline-offset-1 outline-white/10 transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95">
+
+                        <div class="mt-6 text-center sm:text-center">
+
+                            <div class="w-full flex justify-center items-center">
+
+                                <div
+                                    class="mx-auto w-full flex size-12 shrink-0 items-center justify-center rounded-full bg-green-500 sm:mx-0 sm:size-10">
+                                    <x-lucide-check class="w-5 h-5 text-green-200" />
+                                </div>
+
+                            </div>
+
+                            <h3 id="dialog-title" class="mt-2 text-base font-semibold text-neutral-800">
+                                Room booking successfull!
+                            </h3>
+
+                            <div class="mt-2">
+                                <p class="text-sm text-neutral-800">
+                                    {{ session('success') }}
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="my-3 px-4 py-3 gap-4 flex justify-center sm:px-6">
+
+                            <button type="button" command="close" commandfor="booking-success-modal"
+                                class="mt-3 inline-flex w-full justify-center rounded-sm bg-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-800 inset-ring inset-ring-white/5 hover:bg-neutral-300 sm:mt-0 sm:w-auto">
+                                Stay on this page
+                            </button>
+
+                            <a href="{{ route('home') }}">
+                                <button type="button" command="close" commandfor="booking-success-modal"
+                                    class="mt-3 inline-flex w-full justify-center rounded-sm bg-brand-500 px-3 py-2 text-sm font-semibold text-neutral-0 inset-ring inset-ring-white/5 hover:bg-brand-600 sm:mt-0 sm:w-auto">
+                                    Go back to home page
+                                </button>
+                            </a>
+                        </div>
+
+                    </el-dialog-panel>
+                </div>
+            </dialog>
+        </el-dialog>
+    @endif
+
+</div>
 @endsection
