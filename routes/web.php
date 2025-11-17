@@ -57,7 +57,11 @@ Route::view('statistics', 'statistics')->name('statistics');
 
 // Room
 
+Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
+
 Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
+
+Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
 
 Route::post('/rooms/{room}/book', [RoomBookingController::class, 'store'])->name('bookings.store');
 
@@ -65,6 +69,6 @@ Route::post('/rooms/{room}/book', [RoomBookingController::class, 'store'])->name
 
 Route::view('myBookings', 'myBookings')->name('myBookings');
 
-// Room Bookings
+// Reviews
 
 Route::view('reviews', 'reviews')->name('reviews');

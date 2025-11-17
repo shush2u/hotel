@@ -66,7 +66,8 @@ class RoomBookingController extends Controller
 
         // 4. Redirect with success message
         return redirect()->route('rooms.show', $room)
-            ->with('success', 'Room #' . $room->roomNumber . ' successfully booked from ' . $fromDate . ' to ' . $toDate . '!');
+            ->with('success_header', 'Kambarys sėkmingai rezervuotas!')
+            ->with('success', 'Kambarys nr' . $room->roomNumber . ' sėkmingai rezervuotas nuo ' . $fromDate . ' iki ' . $toDate . '!');
     }
 
     /**

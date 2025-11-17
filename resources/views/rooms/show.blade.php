@@ -9,13 +9,13 @@
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m15 18-6-6 6-6" />
                 </svg>
-                Back to Room List
+                Atgal į pagrindinį
             </a>
         </div>
 
         <div class="flex gap-4 items-center">
 
-            <h1 class="text-3xl font-extrabold text-brand-600">Room #{{ $room->roomNumber }}</h1>
+            <h1 class="text-3xl font-extrabold text-brand-600">Kambarys nr. {{ $room->roomNumber }}</h1>
             <span class="text-sm font-semibold text-brand-600 bg-brand-100 px-3 py-1 rounded-sm">
                 {{ ucwords($room->roomType->value) }}
             </span>
@@ -30,7 +30,7 @@
                     <div class="w-full h-80 md:h-full rounded-sm overflow-hidden shadow-xl border border-neutral-100">
                         <img src="{{ $room->photo }}" alt="Photo of Room #{{ $room->roomNumber }}"
                             class="w-full h-full object-cover"
-                            onerror="this.onerror=null;this.src='https://placehold.co/800x600/38bdf8/ffffff?text=Image+Missing'">
+                            onerror="this.onerror=null;this.src='https://placehold.co/800x600/38bdf8/ffffff?text=Nuotrauka+nerasta'">
                     </div>
                 @else
                     <!-- Fallback if no photo is available -->
@@ -47,19 +47,19 @@
 
                 <!-- Cost -->
                 <div class="p-4 bg-brand-100 rounded-sm border border-brand-200 shadow-sm">
-                    <p class="text-sm font-medium text-brand-600">Nightly Cost</p>
+                    <p class="text-sm font-medium text-brand-600">Kaina parai</p>
                     <p class="text-3xl font-bold text-brand-700">${{ number_format($room->costPerNight, 2) }}</p>
                 </div>
 
                 <!-- Description -->
                 <div class="p-4 bg-neutral-50 rounded-sm border border-neutral-200 shadow-sm">
-                    <h3 class="text-xl font-semibold text-neutral-700 mb-2">Description</h3>
+                    <h3 class="text-xl font-semibold text-neutral-700 mb-2">Aprašymas</h3>
                     <p class="text-neutral-700">{{ $room->description }}</p>
                 </div>
 
                 <!-- Amenities -->
                 <div class="p-4 bg-neutral-50 rounded-sm border border-neutral-200 shadow-sm">
-                    <h3 class="text-xl font-semibold text-neutral-700 border-b pb-2 mb-3">Amenities</h3>
+                    <h3 class="text-xl font-semibold text-neutral-700 border-b pb-2 mb-3">Kita</h3>
                     <ul class="space-y-3">
                         <li class="flex items-center text-neutral-700">
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +69,7 @@
                                 <rect width="20" height="15" x="2" y="7" rx="2" ry="2" />
                                 <path d="M17 2l-2 5" />
                             </svg>
-                            TV: <span class="ml-2 font-semibold">{{ $room->tv ? 'Included' : 'Not Available' }}</span>
+                            TV: <span class="ml-2 font-semibold">{{ $room->tv ? 'Yra' : 'Nėra' }}</span>
                         </li>
                         <li class="flex items-center text-neutral-700">
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +82,7 @@
                                 <line x1="12" x2="12.01" y1="17" y2="17" />
                                 <path d="M5 8c4-1.5 8-1.5 12 0" />
                             </svg>
-                            Wi-Fi: <span class="ml-2 font-semibold">{{ $room->wifi ? 'Free' : 'Not Available' }}</span>
+                            Wi-Fi: <span class="ml-2 font-semibold">{{ $room->wifi ? 'Yra' : 'Nėra' }}</span>
                         </li>
                     </ul>
                 </div>
@@ -95,7 +95,7 @@
                         <div class="flex flex-row items-center justify-between gap-4">
 
                             <div>
-                                <label for="fromDate" class="block text-sm font-medium text-neutral-700 mb-1">From Date</label>
+                                <label for="fromDate" class="block text-sm font-medium text-neutral-700 mb-1">Nuo</label>
                                 <input id="fromDate" name="fromDate" type="date" required
                                     value="{{ old('fromDate', request('fromDate')) }}"
                                     class="w-full px-3 py-2 border rounded-sm @error('fromDate') border-red-500 @else border-neutral-300 @enderror focus:ring-blue-500 focus:border-blue-500" />
@@ -105,7 +105,7 @@
                             </div>
 
                             <div>
-                                <label for="toDate" class="block text-sm font-medium text-neutral-700 mb-1">To Date</label>
+                                <label for="toDate" class="block text-sm font-medium text-neutral-700 mb-1">Iki</label>
                                 <input id="toDate" name="toDate" type="date" required
                                     value="{{ old('toDate', request('toDate')) }}"
                                     class="w-full px-3 py-2 border rounded-sm @error('toDate') border-red-500 @else border-neutral-300 @enderror focus:ring-blue-500 focus:border-blue-500" />
@@ -119,7 +119,7 @@
                                 <button type="submit"
                                     class="cursor-pointer w-full h-10 flex items-center gap-2 py-2 px-4 border border-transparent rounded-sm shadow-sm text-lg font-medium text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
                                     <x-lucide-notebook-pen class="w-5 h-5" />
-                                    Book
+                                    Rezervuoti
                                 </button>
                                 @if ($errors->any())
                                     <div class="h-[2lh]"></div>
@@ -137,7 +137,7 @@
                 <button disabled
                     class="w-full flex items-center justify-center gap-2 py-2 px-4 border rounded-sm shadow-sm text-lg font-medium text-brand-800 border-brand-300 bg-brand-100">
                     <x-lucide-notebook-pen class="w-5 h-5" />
-                    Log in to book this room
+                    Prisijungkite kad rezervuoti šį kambarį
                 </button>
 
             @endguest
@@ -171,7 +171,7 @@
                             </div>
 
                             <h3 id="dialog-title" class="mt-2 text-base font-semibold text-neutral-800">
-                                Room booking successfull!
+                                {{ session('success_header') }}
                             </h3>
 
                             <div class="mt-2">
@@ -186,15 +186,9 @@
 
                             <button type="button" command="close" commandfor="booking-success-modal"
                                 class="mt-3 inline-flex w-full justify-center rounded-sm bg-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-800 inset-ring inset-ring-white/5 hover:bg-neutral-300 sm:mt-0 sm:w-auto">
-                                Stay on this page
+                                Uždaryti
                             </button>
 
-                            <a href="{{ route('home') }}">
-                                <button type="button" command="close" commandfor="booking-success-modal"
-                                    class="mt-3 inline-flex w-full justify-center rounded-sm bg-brand-500 px-3 py-2 text-sm font-semibold text-neutral-0 inset-ring inset-ring-white/5 hover:bg-brand-600 sm:mt-0 sm:w-auto">
-                                    Go back to home page
-                                </button>
-                            </a>
                         </div>
 
                     </el-dialog-panel>
