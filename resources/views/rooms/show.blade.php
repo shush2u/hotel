@@ -3,7 +3,7 @@
 @section('content')
     <div class="bg-white p-6 rounded-sm shadow-md grow">
 
-        <div class="">
+        <div class="flex justify-between">
             <a href="{{ route('home') }}" class="inline-flex items-center text-brand-600 hover:text-brand-800 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -11,6 +11,18 @@
                 </svg>
                 Atgal į pagrindinį
             </a>
+
+            @if (Auth::check() && Auth::user()->role->value === 'administrator')
+
+                <a href="{{ route('rooms.edit', $room) }}"
+                    class="cursor-pointer flex items-center gap-2 rounded-sm bg-brand-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-brand-600 focus:shadow-none active:bg-brand-700 hover:bg-brand-600 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                    type="submit">
+                    <x-lucide-wrench class="w-5 h-5" />
+                    Redaguoti
+                </a>
+
+            @endif
+
         </div>
 
         <div class="flex gap-4 items-center">

@@ -101,7 +101,7 @@
                         <label for="tv" class="ml-3 text-sm font-medium text-neutral-700">Televizorius</label>
                     </div>
 
-                    <div class="flex items-center mb-4">
+                    <div class="flex items-center mb-3">
                         <input id="wifi" name="wifi" type="checkbox" value="1"
                             {{ old('wifi') ? 'checked' : '' }}
                             class="h-4 w-4 text-brand-600 border-gray-300 rounded focus:ring-blue-500" />

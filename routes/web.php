@@ -59,15 +59,21 @@ Route::view('statistics', 'statistics')->name('statistics');
 
 Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
 
-Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
-
 Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
 
-Route::post('/rooms/{room}/book', [RoomBookingController::class, 'store'])->name('bookings.store');
+Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
+
+Route::get('/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
+
+Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
+
+Route::delete('/rooms/{room}/destroy', [RoomController::class, 'destroy'])->name('rooms.destroy');
 
 // Room Bookings
 
 Route::view('myBookings', 'myBookings')->name('myBookings');
+
+Route::post('/rooms/{room}/book', [RoomBookingController::class, 'store'])->name('bookings.store');
 
 // Reviews
 
