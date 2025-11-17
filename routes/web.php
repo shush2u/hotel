@@ -1,17 +1,33 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoomController;
+use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 // Home
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', function (Request $request) {
+    $query = Room::query();
 
-// User Login
+    if ($request->filled('roomType')) {
+        $query->where('roomType', $request->roomType);
+    }
+
+    if ($request->filled(['fromDate', 'toDate'])) {
+        $fromDate = $request->fromDate;
+        $toDate = $request->toDate;
+
+        $query->availableInDateRange($fromDate, $toDate);
+    }
+
+    $rooms = $query->get();
+
+    return view('home', compact('rooms'));
+})->name('home');
 
 Route::get('login', function () {
     return view('login');
@@ -37,6 +53,10 @@ Route::post('register', [UserController::class, 'register'])->name('register.att
 // Statistics
 
 Route::view('statistics', 'statistics')->name('statistics');
+
+// Rooms
+
+Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
 
 // Room Bookings
 
