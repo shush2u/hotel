@@ -72,6 +72,8 @@ Route::delete('/rooms/{room}/destroy', [RoomController::class, 'destroy'])->name
 
 // Room Bookings
 
+Route::get('/bookings', [RoomBookingController::class, 'index'])->name('bookings.index');
+
 Route::view('myBookings', 'myBookings')->name('myBookings');
 
 Route::post('/rooms/{room}/book', [RoomBookingController::class, 'store'])->name('bookings.store');
@@ -83,3 +85,7 @@ Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index'
 Route::get('/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
 
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+// Statistics
+
+Route::get('/statistics', [RoomController::class, 'statistics'])->name('statistics.index');

@@ -7,15 +7,24 @@ use App\Models\RoomBooking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Carbon;
 
 class RoomBookingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all rooms with their upcoming and ongoing bookings.
      */
     public function index()
     {
-        //
+        $rooms = Room::with(['roomBookings' => function ($query) {
+            $query->where('toDate', '>', Carbon::today())
+                ->orderBy('fromDate', 'asc') // Order bookings within each room by start date
+                ->with('user'); // Eager load the user who made the booking
+        }])
+        ->orderBy('roomNumber', 'asc')
+        ->get();
+
+        return view('bookings.index', compact('rooms'));
     }
 
     /**

@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\RoomBooking;
+use App\Models\Review;
 use App\Enums\RoomType;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Carbon;
 
 class RoomController extends Controller
 {
@@ -153,5 +157,75 @@ class RoomController extends Controller
         // 4. Redirect
         return redirect()->route('home')
             ->with('success', 'Kambarys ' . $roomNumber . ' sėkmingai ištrintas iš sistemos (įskaitant visas rezervacijas).');
+    }
+
+    /**
+     * Display the owner's statistics dashboard.
+     */
+    public function statistics()
+    {
+        $today = Carbon::today();
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+
+        // 1. Total Rooms
+        $totalRooms = Room::count();
+
+        // // 2. Room Count by Type (e.g., ['single' => 5, 'double' => 3])
+        // $roomTypeCounts = Room::select('roomType', DB::raw('count(*) as count'))
+        //     ->groupBy('roomType')
+        //     ->get()
+        //     ->mapWithKeys(function ($row) {
+        //         // $row->roomType is the raw DB string like 'single'
+        //         $enum = RoomType::from($row->roomType);        // convert to enum
+        //         return [ucfirst($enum->value) => (int) $row->count];
+        //     });
+
+        // 3. Rooms with RoomBooking Count (For table)
+        $roomsWithBookings = Room::withCount('roomBookings')
+            ->orderBy('roomNumber', 'asc')
+            ->get();
+        
+        // 4. Average Review Score
+        $avgReviewScore = Review::avg('rating');
+
+        // 5. Projected Monthly Revenue (Total value of all bookings made this month)
+        // This calculates the total value of reservations added to the system during the current month.
+        $bookingsMadeThisMonth = RoomBooking::where(function ($q) use ($startOfMonth, $endOfMonth) {
+                $q->whereBetween('fromDate', [$startOfMonth, $endOfMonth])
+                ->orWhereBetween('toDate', [$startOfMonth, $endOfMonth])
+                ->orWhere(function ($q2) use ($startOfMonth, $endOfMonth) {
+                    // Booking fully spans the month
+                    $q2->where('fromDate', '<=', $startOfMonth)
+                        ->where('toDate', '>=', $endOfMonth);
+                });
+            })
+            ->with('room') // important for costPerNight
+            ->get();
+        
+        $monthlyRevenueValue = 0;
+        foreach ($bookingsMadeThisMonth as $RoomBooking) {
+            // Calculate nights booked: date difference is inclusive start, exclusive end, so no +1 needed.
+            $nights = Carbon::parse($RoomBooking->fromDate)->diffInDays(Carbon::parse($RoomBooking->toDate));
+            
+            // Check if the related room still exists before calculating value
+            if ($RoomBooking->room) {
+                $monthlyRevenueValue += $nights * $RoomBooking->room->costPerNight;
+            }
+        }
+
+        // 6. Total Lifetime Revenue (Total value of all bookings ever made)
+        $allBookings = RoomBooking::with('room')->get();
+
+        $currentMonthName = Carbon::now()->format('F');
+
+        return view('statistics.index', compact(
+            'totalRooms',
+            //'roomTypeCounts',
+            'roomsWithBookings',
+            'avgReviewScore',
+            'monthlyRevenueValue',
+            'currentMonthName'
+        ));
     }
 }
