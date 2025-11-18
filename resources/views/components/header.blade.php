@@ -25,18 +25,44 @@
 
             </form>
 
-            <form method="GET" action="{{ route('reviews') }}">
+            <a href="{{ route('reviews.index') }}"
+                class="cursor-pointer flex items-center gap-2 rounded-sm border border-transparent py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-neutral-600 hover:text-white hover:bg-brand-600 focus:text-white focus:bg-brand-600 active:border-brand-500 active:text-white active:bg-brand-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="submit">
+                <x-lucide-user-star class="w-5 h-5" />
+                Atsiliepimai
+            </a>
 
-                <button
-                    class="cursor-pointer flex items-center gap-2 rounded-sm border border-transparent py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-neutral-600 hover:text-white hover:bg-brand-600 focus:text-white focus:bg-brand-600 active:border-brand-500 active:text-white active:bg-brand-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="submit">
-                    <x-lucide-user-star class="w-5 h-5" />
-                    Atsiliepimai
-                </button>
+        </div>
 
-            </form>
+    </div>
+
+    <div class="flex items-center gap-4">
+
+        @auth
+
+            @if (Auth::check() && Auth::user()->role->value === 'registeredUser')
+                <form method="GET" action="{{ route('myBookings') }}">
+
+                    <button
+                        class="cursor-pointer flex items-center gap-2 rounded-sm border border-transparent py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-neutral-600 hover:text-white hover:bg-brand-600 focus:text-white focus:bg-brand-600 active:border-brand-500 active:text-white active:bg-brand-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                        type="submit">
+                        <x-lucide-calendar-days class="w-5 h-5" />
+                        Mano rezervacijos
+                    </button>
+
+                </form>
+            @endif
 
             @if (Auth::check() && Auth::user()->role->value === 'administrator')
+                <button
+                    class="cursor-pointer flex items-center rounded-sm gap-2 border border-transparent py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-neutral-600 hover:text-white hover:bg-brand-600 focus:text-white focus:bg-brand-600 active:border-brand-500 active:text-white active:bg-brand-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                    type="submit">
+                    <x-lucide-chart-no-axes-combined class="w-5 h-5" />
+                    Rezervacijos
+                </button>
+            @endif
+
+            @if (Auth::check() && Auth::user()->role->value === 'director')
                 <form method="GET" action="{{ route('statistics') }}">
 
                     <button
@@ -49,24 +75,6 @@
                 </form>
             @endif
 
-        </div>
-
-    </div>
-
-    <div class="flex items-center gap-4">
-
-        @auth
-
-            <form method="GET" action="{{ route('myBookings') }}">
-
-                <button
-                    class="cursor-pointer flex items-center gap-2 rounded-sm border border-transparent py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-neutral-600 hover:text-white hover:bg-brand-600 focus:text-white focus:bg-brand-600 active:border-brand-500 active:text-white active:bg-brand-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="submit">
-                    <x-lucide-calendar-days class="w-5 h-5" />
-                    Mano rezervacijos
-                </button>
-
-            </form>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -83,7 +91,7 @@
 
                 <x-lucide-circle-user class="w-6 h-6" />
 
-                <span class="text-lg">
+                <span class="text-md">
                     {{ Auth::user()->fullName }}
                 </span>
 

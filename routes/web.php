@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomBookingController;
 use App\Models\Room;
@@ -77,4 +78,8 @@ Route::post('/rooms/{room}/book', [RoomBookingController::class, 'store'])->name
 
 // Reviews
 
-Route::view('reviews', 'reviews')->name('reviews');
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+
+Route::get('/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
+
+Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');

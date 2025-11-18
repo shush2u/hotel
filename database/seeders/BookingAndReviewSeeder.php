@@ -38,6 +38,7 @@ class BookingAndReviewSeeder extends Seeder
             'fromDate' => now()->subMonths(2),
             'toDate' => now()->subMonths(2)->addDays(5),
         ]);
+        Review::factory()->create(['user_id' => $users[1]->id]);
 
         // --- Scenario 3: 1 user with 2 bookings in the past, both with a review ---
         $user3 = $users[2];
@@ -50,7 +51,6 @@ class BookingAndReviewSeeder extends Seeder
             'toDate' => now()->subYear()->addDays(4),
         ]);
         // Review for Booking 3.1
-        Review::factory()->create(['room_booking_id' => $booking1->id]);
 
         // Booking 3.2
         $booking2 = RoomBooking::factory()->create([
@@ -60,6 +60,6 @@ class BookingAndReviewSeeder extends Seeder
             'toDate' => now()->subMonths(6)->addDays(2),
         ]);
         // Review for Booking 3.2
-        Review::factory()->create(['room_booking_id' => $booking2->id]);
+        Review::factory()->create(['user_id' => $users[2]->id]);
     }
 }

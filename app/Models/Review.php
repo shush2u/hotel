@@ -10,7 +10,7 @@ class Review extends Model
     use HasFactory;
 
     protected $fillable = [
-        'room_booking_id',
+        'user_id',
         'rating',
         'description',
     ];
@@ -20,10 +20,10 @@ class Review extends Model
     ];
 
     /**
-     * Get the booking that the review belongs to.
+     * Get the user that made the booking.
      */
-    public function roomBooking()
+    public function user()
     {
-        return $this->belongsTo(RoomBooking::class);
+        return $this->belongsTo(User::class);
     }
 }

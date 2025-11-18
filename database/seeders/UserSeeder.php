@@ -19,6 +19,14 @@ class UserSeeder extends Seeder
             'role' => UserRole::ADMINISTRATOR,
         ]);
 
+        // 1. Create the Administrator
+        User::factory()->create([
+            'fullName' => 'Director User',
+            'email' => 'director@hotel.com',
+            'password' => Hash::make('password'), // Simple password for testing
+            'role' => UserRole::DIRECTOR,
+        ]);
+
         // 2. Create 4 Registered Users
         User::factory()->count(4)->create([
             'role' => UserRole::REGISTERED_USER,
