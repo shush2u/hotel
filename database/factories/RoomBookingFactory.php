@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\BookingType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RoomBookingFactory extends Factory
@@ -15,6 +16,7 @@ class RoomBookingFactory extends Factory
         return [
             'fromDate' => $fromDate,
             'toDate' => $toDate,
+            'booking_type' => BookingType::CLIENT
         ];
     }
 }

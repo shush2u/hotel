@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BookingType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,11 +15,13 @@ class RoomBooking extends Model
         'room_id',
         'fromDate',
         'toDate',
+        'booking_type'
     ];
 
     protected $casts = [
         'fromDate' => 'date',
         'toDate' => 'date',
+        'booking_type' => BookingType::class
     ];
 
     /**
