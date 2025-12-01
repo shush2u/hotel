@@ -46,11 +46,13 @@ Route::post('logout', function () {
     return redirect('/');
 })->name('logout');
 
-// User Registration
+// User
 
 Route::view('register', 'register')->name('register');
 
 Route::post('register', [UserController::class, 'register'])->name('register.attempt');
+
+Route::patch('notification', [UserController::class, 'markNotificationsAsRead'])->name('notification.markAll');
 
 // Statistics
 

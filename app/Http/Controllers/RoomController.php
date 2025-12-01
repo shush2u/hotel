@@ -6,7 +6,7 @@ use App\Models\Room;
 use App\Models\RoomBooking;
 use App\Models\Review;
 use App\Enums\RoomType;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Carbon;
@@ -18,6 +18,10 @@ class RoomController extends Controller
      */
     public function index()
     {
+        if (Auth::check()) {
+            $notifications = 0;
+        }
+
         $rooms = Room::all();
 
         return view('rooms.index', [

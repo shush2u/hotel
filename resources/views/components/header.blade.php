@@ -83,7 +83,7 @@
                 </button>
             </form>
 
-            <button class="text-neutral-700 flex items-center gap-2 cursor-pointer" type="submit">
+            <button class="text-neutral-700 flex items-center gap-2" type="submit">
 
                 <x-lucide-circle-user class="w-6 h-6" />
 
@@ -92,6 +92,79 @@
                 </span>
 
             </button>
+
+            <div x-data="{ open: false }" class="relative">
+
+                <button @click="open = !open"
+                    class="cursor-pointer flex items-center gap-2 rounded-sm border border-transparent p-2 text-center text-sm transition-all shadow-sm hover:shadow-lg text-neutral-600 hover:text-white hover:bg-brand-600 focus:text-white focus:bg-brand-600 active:border-brand-500 active:text-white active:bg-brand-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+
+                    <x-lucide-mail class="w-5 h-5" />
+
+                    @php
+                        $unreadNotifications = Auth::user()->notifications->where('acknowledged', false);
+                    @endphp
+
+                    @if ($unreadNotifications->count() > 0)
+                        <span>
+                            {{ $unreadNotifications->count() }}
+                        </span>
+                    @else
+                        <span class="text-xs">0</span>
+                    @endif
+                </button>
+
+                <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95" @click.outside="open = false" style="display: none;"
+                    class="absolute right-0 z-50 mt-2 w-80 origin-top-right rounded-sm bg-white py-1 shadow-md focus:outline-none">
+                    <div class="px-4 py-2 border-b border-gray-100">
+                        <h3 class="text-sm font-semibold text-gray-700">Pranešimai</h3>
+                    </div>
+
+                    <div class="max-h-64 overflow-y-auto">
+                        @forelse($unreadNotifications as $notification)
+                            <div class="px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                                <div class="flex items-start gap-3">
+                                    <div @class([
+                                        'mt-1 w-2 h-2 rounded-full shrink-0',
+                                        'bg-blue-500' =>
+                                            $notification->notification_type === \App\Enums\NotificationType::INFO,
+                                        'bg-red-500' =>
+                                            $notification->notification_type ===
+                                            \App\Enums\NotificationType::IMPORTANT,
+                                    ])></div>
+
+                                    <div>
+                                        <p class="text-sm text-gray-600 line-clamp-2">
+                                            {{ $notification->message }}
+                                        </p>
+                                        <span class="text-xs text-gray-400">
+                                            {{ $notification->created_at->diffForHumans() }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="px-4 py-6 text-center text-sm text-gray-500">
+                                Nėra naujų pranešimų.
+                            </div>
+                        @endforelse
+                    </div>
+
+                    @if ($unreadNotifications->count() > 0)
+                        <div class="p-2 border-t border-gray-100 bg-gray-50 text-center">
+                            <form method="POST" action="{{ route('notification.markAll') }}">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="text-xs font-medium text-brand-600 hover:text-brand-800">
+                                    Pažymėti visus kaip perskaitytus
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                </div>
+            </div>
 
         @endauth
 

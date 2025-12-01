@@ -41,11 +41,13 @@ class User extends Authenticatable
         'isActive' => 'boolean',
     ];
 
-    /**
-     * Get the room bookings for the user.
-     */
     public function roomBookings()
     {
         return $this->hasMany(RoomBooking::class);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }

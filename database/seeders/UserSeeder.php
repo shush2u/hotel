@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Enums\UserRole;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -31,5 +32,17 @@ class UserSeeder extends Seeder
         User::factory()->count(4)->create([
             'role' => UserRole::REGISTERED_USER,
         ]);
+
+        $userIds = User::pluck('id');
+
+        $userIds->each(function (int $userId) {
+            $notificationCount = rand(1, 3); 
+            
+            Notification::factory()
+                ->count($notificationCount)
+                ->create([
+                    'user_id' => $userId, 
+                ]);
+        });
     }
 }

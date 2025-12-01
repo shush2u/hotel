@@ -91,16 +91,13 @@
                     @endphp
 
                     <div
-                        class="bg-white rounded-sm overflow-hidden card-shadow hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 border border-gray-200">
+                        class="bg-white rounded-sm overflow-hidden card-shadow hover:shadow-2xl transition duration-100 border border-gray-200">
 
-                        <div class="h-48 bg-indigo-100 relative">
+                        <div class="h-48 bg-indigo-100">
                             <img src="{{ $photoUrl }}" alt="Photo of Room {{ $room->roomNumber }}"
                                 class="w-full h-full object-cover"
                                 onerror="this.onerror=null;this.src='https://placehold.co/600x400/orange/white?text=placeholder'">
-                            <span
-                                class="absolute top-3 right-3 bg-white text-brand-600 text-sm font-extrabold px-3 py-1 rounded-sm shadow-lg">
-                                ${{ number_format($room->costPerNight, 2) }}
-                            </span>
+                            
                         </div>
 
                         <div class="p-4 pb-2">
@@ -113,26 +110,35 @@
                                 </span>
                             </div>
 
-                            <div class="flex items-center space-x-2 mb-4 text-gray-700">
+                            <div class="flex items-center justify-between space-x-2 mb-2 text-gray-700">
+
+                                <div class="flex items-center space-x-2 text-gray-700">
+                                    <span
+                                        class="flex items-center gap-1 text-sm font-medium @if ($room->tv) text-green-600 @else text-red-500 @endif">
+                                        @if ($room->tv)
+                                            <x-lucide-monitor-check class="w-4 h-4" />
+                                        @else
+                                            <x-lucide-monitor-x class="w-4 h-4" />
+                                        @endif
+                                        TV
+                                    </span>
+                                    <span
+                                        class="flex items-center gap-1 text-sm font-medium @if ($room->wifi) text-green-600 @else text-red-500 @endif">
+                                        @if ($room->wifi)
+                                            <x-lucide-wifi class="w-4 h-4" />
+                                        @else
+                                            <x-lucide-wifi-off class="w-4 h-4" />
+                                        @endif
+                                        WiFi
+                                    </span>
+                                </div>
+
                                 <span
-                                    class="flex items-center gap-1 text-sm font-medium @if ($room->tv) text-green-600 @else text-red-500 @endif">
-                                    @if ($room->tv)
-                                        <x-lucide-monitor-check class="w-4 h-4" />
-                                    @else
-                                        <x-lucide-monitor-x class="w-4 h-4" />
-                                    @endif
-                                    TV
-                                </span>
-                                <span
-                                    class="flex items-center gap-1 text-sm font-medium @if ($room->wifi) text-green-600 @else text-red-500 @endif">
-                                    @if ($room->wifi)
-                                        <x-lucide-wifi class="w-4 h-4" />
-                                    @else
-                                        <x-lucide-wifi-off class="w-4 h-4" />
-                                    @endif
-                                    WiFi
+                                    class="bg-white text-brand-600 text-sm font-extrabold px-3 py-1 rounded-sm">
+                                    ${{ number_format($room->costPerNight, 2) }}
                                 </span>
                             </div>
+                            
 
                         </div>
 

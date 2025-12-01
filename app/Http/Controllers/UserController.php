@@ -108,4 +108,14 @@ class UserController extends Controller
     {
         //
     }
+
+    public function markNotificationsAsRead() 
+    {
+        Auth::user()
+        ->notifications()
+        ->where('acknowledged', false)
+        ->update(['acknowledged' => true]);
+
+        return back()->with('success', 'All notifications marked as read.');
+    }
 }
