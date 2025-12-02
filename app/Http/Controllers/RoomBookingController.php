@@ -137,7 +137,7 @@ class RoomBookingController extends Controller
         //
     }
 
-    public function destroy(Request $request, RoomBooking $roomBooking)
+    public function destroy(RoomBooking $roomBooking)
     {
         $roomBooking->delete();
 

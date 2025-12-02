@@ -72,32 +72,48 @@
                                     <li
                                         class="py-4 flex gap-8 justify-between items-center transition duration-200 hover:bg-neutral-50 px-2 -mx-2 rounded-md">
 
-                                        <!-- Date and Timeframe -->
-                                        <div>
-                                            <p class="text-lg font-semibold text-neutral-800">
-                                                {{ \Carbon\Carbon::parse($booking->fromDate)->format('M d, Y') }}
-                                                <span class="text-neutral-500 mx-1">&rarr;</span>
-                                                {{ \Carbon\Carbon::parse($booking->toDate)->format('M d, Y') }}
-                                            </p>
-                                            <p class="text-sm text-neutral-600 mt-0.5">
-                                                Paros:
-                                                <span
-                                                    class="font-mono">{{ \Carbon\Carbon::parse($booking->fromDate)->diffInDays($booking->toDate) }}</span>
-                                            </p>
+                                        <div class="flex flex-row gap-4 items-center">
+
+                                            @if ($booking->booking_type == \App\Enums\BookingType::CLIENT)
+                                                <div>
+                                                    <x-lucide-user class="w-7 h-7" />
+                                                </div>
+                                            @endif
+
+                                            @if ($booking->booking_type == \App\Enums\BookingType::MAINTENANCE)
+                                                <div>
+                                                    <x-lucide-construction class="w-7 h-7" />
+                                                </div>
+                                            @endif
+
+                                            <div>
+                                                <p class="text-lg font-semibold text-neutral-800">
+                                                    {{ \Carbon\Carbon::parse($booking->fromDate)->format('M d, Y') }}
+                                                    <span class="text-neutral-500 mx-1">&rarr;</span>
+                                                    {{ \Carbon\Carbon::parse($booking->toDate)->format('M d, Y') }}
+                                                </p>
+                                                <p class="text-sm text-neutral-600 mt-0.5">
+                                                    Paros:
+                                                    <span
+                                                        class="font-mono">{{ \Carbon\Carbon::parse($booking->fromDate)->diffInDays($booking->toDate) }}</span>
+                                                </p>
+
+                                            </div>
                                         </div>
 
-                                        <!-- User Info -->
-                                        <div class="text-right">
-                                            <p class="text-base font-medium text-green-700">
-                                                Rezervavo:
-                                                <span class="font-bold">
-                                                    {{ $booking->user->fullName ?? 'User ID ' . $booking->user_id }}
-                                                </span>
-                                            </p>
-                                            <p class="text-xs text-neutral-500 mt-1">
-                                                Rezervavo prieš: {{ $booking->created_at->diffForHumans() }}
-                                            </p>
-                                        </div>
+                                        @if ($booking->booking_type == \App\Enums\BookingType::CLIENT)
+                                            <div class="text-right">
+                                                <p class="text-base font-medium text-green-700">
+                                                    Rezervavo:
+                                                    <span class="font-bold">
+                                                        {{ $booking->user->fullName ?? 'User ID ' . $booking->user_id }}
+                                                    </span>
+                                                </p>
+                                                <p class="text-xs text-neutral-500 mt-1">
+                                                    Rezervavo prieš: {{ $booking->created_at->diffForHumans() }}
+                                                </p>
+                                            </div>
+                                        @endif
 
                                         <button
                                             @click="openCancelModal('{{ $room->roomNumber }}', '{{ $dateString }}', '{{ route('my_bookings.destroy', $booking) }}')"
@@ -110,6 +126,51 @@
                                 @endforeach
                             </ul>
                         @endif
+
+                        <p class="mt-4">
+                            Blokuoti rezervacijas šiame intervale:
+                        </p>
+
+                        <form action="{{ route('rooms.scheduleMaintenance', $room) }}" method="POST">
+                            @csrf
+
+                            <div class="flex flex-row items-center justify-between gap-4 mt-1">
+
+                                {{-- From Date Input --}}
+                                <div>
+                                    <label for="fromDate"
+                                        class="block text-sm font-medium text-neutral-700 mb-1">Nuo</label>
+                                    <input id="fromDate" name="fromDate" type="date" autocomplete="fromDate"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:ring-blue-500 focus:border-blue-500 @error('fromDate') border-red-500 @enderror"
+                                        placeholder="Start Date" />
+                                    @error('fromDate')
+                                        <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                {{-- To Date Input --}}
+                                <div>
+                                    <label for="toDate"
+                                        class="block text-sm font-medium text-neutral-700 mb-1">Iki</label>
+                                    <input id="toDate" name="toDate" type="date" autocomplete="toDate"
+                                        class="w-full px-4 py-2 border border-neutral-300 rounded-sm focus:ring-blue-500 focus:border-blue-500 @error('toDate') border-red-500 @enderror"
+                                        placeholder="End Date" />
+                                    @error('toDate')
+                                        <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                {{-- Submit Button --}}
+                                <div>
+                                    <div class="h-lh"></div>
+                                    <button type="submit"
+                                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-sm shadow-sm text-lg font-medium text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                                        <x-lucide-construction class="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
                     </div>
                 @endforeach
             </div>
@@ -161,13 +222,11 @@
 
                         <div class="my-3 px-4 py-3 gap-4 flex justify-center sm:px-6">
 
-                            {{-- Close Button --}}
                             <button type="button" @click="modalOpen = false"
                                 class="mt-3 inline-flex w-full justify-center rounded-sm bg-neutral-200 px-3 py-2 text-sm font-semibold text-neutral-800 inset-ring inset-ring-white/5 hover:bg-neutral-300 sm:mt-0 sm:w-auto">
                                 Atšaukti
                             </button>
 
-                            {{-- Form with Dynamic Action --}}
                             <form method="POST" :action="cancelUrl">
                                 @csrf
                                 @method('DELETE')

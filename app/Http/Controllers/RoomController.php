@@ -6,13 +6,23 @@ use App\Models\Room;
 use App\Models\RoomBooking;
 use App\Models\Review;
 use App\Enums\RoomType;
+use App\Services\RoomService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class RoomController extends Controller
 {
+
+    protected RoomService $roomService;
+
+    public function __construct(RoomService $roomService)
+    {
+        $this->roomService = $roomService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -231,5 +241,31 @@ class RoomController extends Controller
             'monthlyRevenueValue',
             'currentMonthName'
         ));
+    }
+
+    public function scheduleMaintenance(Request $request, Room $room)
+    {
+        $validatedData = $request->validate([
+            'fromDate' => ['required', 'date'],
+            'toDate' => [
+                'required', 
+                'date', 
+                'after_or_equal:fromDate' 
+            ],
+        ]);
+
+        $success = $this->roomService->markRoomForMaintenance(
+            $room, 
+            $validatedData['fromDate'], 
+            $validatedData['toDate']
+        );
+
+        if ($success) {
+            Session::flash('success', "Room {$room->roomNumber} has been successfully scheduled for maintenance from {$validatedData['fromDate']} to {$validatedData['toDate']}.");
+        } else {
+            Session::flash('error', "Failed to schedule maintenance for Room {$room->roomNumber}.");
+        }
+
+        return back();
     }
 }

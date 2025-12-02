@@ -82,6 +82,8 @@ Route::delete('/rooms/{room}/destroy', [RoomController::class, 'destroy'])->name
 
 Route::get('/bookings', [RoomBookingController::class, 'index'])->name('bookings.index');
 
+Route::post('/bookings/{room}/schedule-maintenance', [RoomController::class, 'scheduleMaintenance'])->name('rooms.scheduleMaintenance');
+
 Route::view('myBookings', 'myBookings')->name('myBookings');
 
 Route::post('/rooms/{room}/book', [RoomBookingController::class, 'store'])->name('bookings.store');
