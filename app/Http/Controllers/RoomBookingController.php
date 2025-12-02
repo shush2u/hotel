@@ -149,6 +149,6 @@ class RoomBookingController extends Controller
             NotificationType::IMPORTANT
         );
 
-        return redirect()->route('my_bookings.index');
+        return back();
     }
 }

@@ -73,7 +73,7 @@
                                         @click="openCancelModal('{{ $room->roomNumber }}', '{{ $dateString }}', '{{ route('my_bookings.destroy', $booking) }}')"
                                         class="cursor-pointer flex items-center gap-2 rounded-sm bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-red-600 focus:shadow-none active:bg-red-700 hover:bg-red-600 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                         type="button">
-                                        <x-lucide-log-out class="w-5 h-5" />
+                                        <x-lucide-trash class="w-5 h-5" />
                                         Atšaukti
                                     </button>
                                 </li>
@@ -86,7 +86,6 @@
 
 
         <el-dialog>
-            {{-- 3. Modal visibility and content controlled by Alpine --}}
             <dialog :open="modalOpen" id="room-booking-cancel-confirm-modal" aria-labelledby="dialog-title"
                 class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent z-50">
 
@@ -148,7 +147,6 @@
                                     Pašalinti
                                 </button>
                             </form>
-
 
                         </div>
 
