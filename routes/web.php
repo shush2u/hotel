@@ -54,6 +54,12 @@ Route::post('register', [UserController::class, 'register'])->name('register.att
 
 Route::patch('notification', [UserController::class, 'markNotificationsAsRead'])->name('notification.markAll');
 
+// User bookings
+
+Route::get('/my_bookings', [RoomBookingController::class, 'indexMyBookings'])->name('my_bookings.index');
+
+Route::delete('/my_bookings/{room_booking}', [RoomBookingController::class, 'destroy'])->name('my_bookings.destroy');
+
 // Statistics
 
 Route::view('statistics', 'statistics')->name('statistics');

@@ -8,9 +8,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use App\Services\NotificationService;
+use App\Enums\NotificationType;
 
 class RoomBookingController extends Controller
 {
+
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService) 
+    {
+        $this->notificationService = $notificationService;
+    }
+
     /**
      * Display a listing of all rooms with their upcoming and ongoing bookings.
      */
@@ -87,6 +98,29 @@ class RoomBookingController extends Controller
         //
     }
 
+    public function indexMyBookings() {
+
+        $userId = Auth::id();
+        $tomorrow = Carbon::tomorrow();
+
+        $rooms = Room::whereHas('roomBookings', function ($query) use ($userId, $tomorrow) {
+            $query
+                ->where('toDate', '>=', $tomorrow) 
+                ->where('user_id', $userId);
+        })
+        ->with(['roomBookings' => function ($query) use ($userId, $tomorrow) {
+            $query
+                ->where('toDate', '>=', $tomorrow)
+                ->where('user_id', $userId)
+                ->orderBy('fromDate', 'asc');
+        }])
+        ->get();
+
+        Log::info('Booked rooms', ['rooms' => $rooms]);
+
+        return view('my_bookings.index', compact('rooms'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -103,11 +137,18 @@ class RoomBookingController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(RoomBooking $roomBooking)
+    public function destroy(Request $request, RoomBooking $roomBooking)
     {
-        //
+        $roomBooking->delete();
+
+        $message = "Jusu rezervacija kambariui nr. {$roomBooking->room->id} ({$roomBooking->fromDate->toDateString()} - {$roomBooking->toDate->toDateString()}) buvo atšaukta.";
+
+        $this->notificationService->createNotification(
+            $roomBooking->user->id,
+            $message,
+            NotificationType::IMPORTANT
+        );
+
+        return redirect()->route('my_bookings.index');
     }
 }

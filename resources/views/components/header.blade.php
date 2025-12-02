@@ -41,16 +41,12 @@
         @auth
 
             @if (Auth::check() && Auth::user()->role->value === 'registeredUser')
-                <form method="GET" action="{{ route('myBookings') }}">
-
-                    <button
-                        class="cursor-pointer flex items-center gap-2 rounded-sm border border-transparent py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-neutral-600 hover:text-white hover:bg-brand-600 focus:text-white focus:bg-brand-600 active:border-brand-500 active:text-white active:bg-brand-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                        type="submit">
-                        <x-lucide-calendar-days class="w-5 h-5" />
-                        Mano rezervacijos
-                    </button>
-
-                </form>
+                <a href="{{ route('my_bookings.index') }}"
+                    class="cursor-pointer flex items-center gap-2 rounded-sm border border-transparent py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-neutral-600 hover:text-white hover:bg-brand-600 focus:text-white focus:bg-brand-600 active:border-brand-500 active:text-white active:bg-brand-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                    type="submit">
+                    <x-lucide-calendar-days class="w-5 h-5" />
+                    Mano rezervacijos
+                </a>
             @endif
 
             @if (Auth::check() && Auth::user()->role->value === 'administrator')
@@ -136,7 +132,7 @@
                                     ])></div>
 
                                     <div>
-                                        <p class="text-sm text-gray-600 line-clamp-2">
+                                        <p class="text-sm text-gray-600">
                                             {{ $notification->message }}
                                         </p>
                                         <span class="text-xs text-gray-400">
