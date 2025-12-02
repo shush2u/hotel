@@ -30,7 +30,7 @@
                 @foreach ($rooms as $room)
                     <div class="bg-white p-6 rounded-xl shadow-lg border border-neutral-200">
 
-                        <div class="flex justify-between items-center mb-4 pb-3 border-b border-neutral-200">
+                        <div class="flex justify-between items-center gap-4 mb-4 pb-3 border-b border-neutral-200">
                             <h2 class="text-2xl font-bold text-brand-600">
                                 Kambarys {{ $room->roomNumber }}
                                 <span

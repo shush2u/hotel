@@ -54,9 +54,41 @@
                 @endif
             </div>
 
-            <!-- COLUMN 2: Details, Cost, Description, and Amenities -->
             <div class="space-y-6 md:order-2 order-1">
 
+                @php
+                    use App\Enums\BookingType;
+                    use Carbon\Carbon;
+
+                    $threeMonthsFromNow = Carbon::now()->addMonths(3);
+
+                    $maintenanceBookings = $room->roomBookings->filter(function ($booking) use ($threeMonthsFromNow) {
+                        $isMaintenance = $booking->booking_type->value === BookingType::MAINTENANCE->value;
+
+                        $endsWithinThreeMonths =
+                            $booking->toDate->lte($threeMonthsFromNow) && $booking->toDate->gte(Carbon::now());
+
+                        return $isMaintenance && $endsWithinThreeMonths;
+                    });
+                @endphp
+
+                @if ($maintenanceBookings->isNotEmpty())
+                    <div class="p-4 bg-red-100 rounded-sm border border-red-200 shadow-sm">
+                        <p class="text-sm font-medium text-red-600">
+                            Šio kambario negalima rezervuoti
+
+                            @foreach ($maintenanceBookings as $booking)
+                                <span class="font-bold">
+                                    nuo {{ $booking->fromDate->format('Y-m-d') }} iki
+                                    {{ $booking->toDate->format('Y-m-d') }}
+                                </span>
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        </p>
+                    </div>
+                @endif
                 <!-- Cost -->
                 <div class="p-4 bg-brand-100 rounded-sm border border-brand-200 shadow-sm">
                     <p class="text-sm font-medium text-brand-600">Kaina parai</p>
@@ -74,26 +106,20 @@
                     <h3 class="text-xl font-semibold text-neutral-700 border-b pb-2 mb-3">Kita</h3>
                     <ul class="space-y-3">
                         <li class="flex items-center text-neutral-700">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-5 h-5 mr-3 {{ $room->tv ? 'text-green-500' : 'text-red-500' }}" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <rect width="20" height="15" x="2" y="7" rx="2" ry="2" />
-                                <path d="M17 2l-2 5" />
-                            </svg>
+                            @if ($room->tv)
+                                <x-lucide-monitor-check class="w-5 h-5 mr-2 text-green-500" />
+                            @else
+                                <x-lucide-monitor-x class="w-5 h-5 mr-2 text-red-500" />
+                            @endif
                             TV: <span class="ml-2 font-semibold">{{ $room->tv ? 'Yra' : 'Nėra' }}</span>
                         </li>
                         <li class="flex items-center text-neutral-700">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-5 h-5 mr-3 {{ $room->wifi ? 'text-green-500' : 'text-red-500' }}"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 20.94c.54 0 1.09-.08 1.63-.23a10 10 0 0 0 5.16-5.16c.15-.54.23-1.09.23-1.63" />
-                                <path
-                                    d="M12 20.94c-.54 0-1.09-.08-1.63-.23a10 10 0 0 1-5.16-5.16c-.15-.54-.23-1.09-.23-1.63" />
-                                <line x1="12" x2="12.01" y1="17" y2="17" />
-                                <path d="M5 8c4-1.5 8-1.5 12 0" />
-                            </svg>
+
+                            @if ($room->wifi)
+                                <x-lucide-wifi class="w-5 h-5 mr-2 text-green-500" />
+                            @else
+                                <x-lucide-wifi-off class="w-5 h-5 mr-2 text-red-500" />
+                            @endif
                             Wi-Fi: <span class="ml-2 font-semibold">{{ $room->wifi ? 'Yra' : 'Nėra' }}</span>
                         </li>
                     </ul>

@@ -69,8 +69,8 @@ class RoomBookingController extends Controller
         if (!$availableRoom) {
             // If the room is not available, throw a custom validation exception
             throw ValidationException::withMessages([
-                'fromDate' => 'This room is not available for the selected dates.',
-                'toDate' => 'This room is not available for the selected dates.',
+                'fromDate' => 'Šio kambario negalite rezervuotis pasirinktomis datomis.',
+                'toDate' => 'Šio kambario negalite rezervuotis pasirinktomis datomis.',
             ]);
         }
 
