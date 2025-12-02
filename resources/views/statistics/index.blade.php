@@ -54,11 +54,11 @@
         </div> --}}
 
         <!-- --- BOOKING DETAILS PER ROOM --- -->
-        <h2 class="text-2xl font-semibold text-neutral-700 mb-4">Bendras rezervacijų kiekis per kambarį</h2>
+        <h2 class="text-2xl font-semibold text-neutral-700 mb-4">Individualių kambarių statistika:</h2>
         <div class="bg-white p-6 rounded-xl shadow-lg border border-neutral-200 overflow-x-auto">
 
             @if ($roomsWithBookings->isEmpty())
-                <div class="text-center p-6 text-neutral-500">No rooms have been added to the system.</div>
+                <div class="text-center p-6 text-neutral-500">Nėra kambarių sistemoje.</div>
             @else
                 <table class="min-w-full divide-y divide-neutral-200">
                     <thead class="bg-neutral-50">
@@ -71,6 +71,10 @@
                                 Kaina per parą</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-neutral-500 uppercase tracking-wider">
                                 Bendras rezervacijų skaičius</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                Bendra rezervacijų trukmė (dienomis)</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                Įplaukos</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-200">
@@ -86,6 +90,25 @@
                                     ${{ number_format($room->costPerNight, 2) }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-extrabold text-right text-neutral-800">
                                     {{ $room->roomBookings()->count() }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-extrabold text-right text-neutral-800">
+                                    @php
+                                        $totalDays = $room->roomBookings->sum(function ($booking) {
+                                            if ($booking->fromDate && $booking->toDate) {
+                                                return $booking->fromDate->diffInDays($booking->toDate);
+                                            }
+                                            return 0;
+                                        });
+                                    @endphp
+                                    {{ $totalDays }}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-extrabold text-right text-neutral-800">
+                                    @php
+                                        $costPerNight = (float) $room->costPerNight;
+                                        $totalRevenue = $totalDays * $costPerNight;
+                                    @endphp
+                                    ${{ number_format($totalRevenue, 2) }}
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
