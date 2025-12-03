@@ -97,7 +97,7 @@
                             <img src="{{ $photoUrl }}" alt="Photo of Room {{ $room->roomNumber }}"
                                 class="w-full h-full object-cover"
                                 onerror="this.onerror=null;this.src='https://placehold.co/600x400/orange/white?text=placeholder'">
-                            
+
                         </div>
 
                         <div class="p-4 pb-2">
@@ -133,12 +133,11 @@
                                     </span>
                                 </div>
 
-                                <span
-                                    class="bg-white text-brand-600 text-sm font-extrabold px-3 py-1 rounded-sm">
+                                <span class="bg-white text-brand-600 text-sm font-extrabold px-3 py-1 rounded-sm">
                                     ${{ number_format($room->costPerNight, 2) }}
                                 </span>
                             </div>
-                            
+
 
                         </div>
 

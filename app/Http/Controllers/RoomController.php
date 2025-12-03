@@ -53,7 +53,6 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validate the incoming request data
         $validatedData = $request->validate([
             'roomNumber' => ['required', 'integer', 'unique:rooms,roomNumber', 'min:1'],
             'roomType' => ['required', 'string', 'in:single,double,triple'],
@@ -61,22 +60,23 @@ class RoomController extends Controller
             'description' => ['required', 'string', 'max:500'],
             'tv' => ['nullable', 'boolean'],
             'wifi' => ['nullable', 'boolean'],
-            'photo' => ['nullable', 'string'],
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        // 2. Create the room
+        $imageFile = $request->file('photo');
+
+        $imageData = $imageFile->getContent();
+
         $room = Room::create([
             'roomNumber' => $validatedData['roomNumber'],
             'roomType' => RoomType::from($validatedData['roomType']),
             'costPerNight' => $validatedData['costPerNight'],
             'description' => $validatedData['description'],
-            // Checkboxes are only present in request if checked. Set default to false if not present.
             'tv' => $request->has('tv'),
             'wifi' => $request->has('wifi'),
-            'photo' => $validatedData['photo'],
+            'photo' => $imageData,
         ]);
 
-        // 3. Redirect to the newly created room's detail page with a success message
         return redirect()->route('rooms.show', $room)
             ->with('success_header', 'Kambarys sėkmingai įtrauktas!')    
             ->with('success', 'Naujas kambarys ' . $room->roomNumber . ' sėkmingai įtrauktas!');
@@ -104,33 +104,20 @@ class RoomController extends Controller
      */
     public function update(Request $request, Room $room)
     {
-        // 1. Validate the incoming request data
         $validatedData = $request->validate([
-            // 'unique:rooms,roomNumber,' . $room->id ensures the number is unique
-            // BUT ignores the current room's ID, allowing the number to remain the same.
             'roomNumber' => ['required', 'integer', Rule::unique('rooms')->ignore($room->id), 'min:1'],
             'roomType' => ['required', 'string', 'in:single,double,triple'],
             'costPerNight' => ['required', 'numeric', 'min:0.01'],
             'description' => ['required', 'string', 'max:500'],
             'tv' => ['nullable', 'boolean'],
             'wifi' => ['nullable', 'boolean'],
-            // Photo is nullable on update (user doesn't have to re-upload)
-            //'photo' => ['nullable', 'image', 'max:2048', 'mimes:jpeg,png,jpg'], 
-            'photo' => ['nullable', 'string'],
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        // // 2. Handle Photo Upload / Deletion
-        // $photoPath = $room->photo; // Default to existing photo path
-        // if ($request->hasFile('photo')) {
-        //     // Delete old photo if it exists
-        //     if ($room->photo) {
-        //         Storage::disk('public')->delete($room->photo);
-        //     }
-        //     // Store the new photo
-        //     $photoPath = $request->file('photo')->store('room_photos', 'public');
-        // }
+        $imageFile = $request->file('photo');
 
-        // 3. Prepare data for update
+        $imageData = $imageFile->getContent();
+
         $updateData = [
             'roomNumber' => $validatedData['roomNumber'],
             'roomType' => RoomType::from($validatedData['roomType']),
@@ -138,14 +125,11 @@ class RoomController extends Controller
             'description' => $validatedData['description'],
             'tv' => $request->has('tv'),
             'wifi' => $request->has('wifi'),
-            //'photo' => $photoPath,
-            'photo' => $request->has('photo'),
+            'photo' => $imageData,
         ];
 
-        // 4. Update the room
         $room->update($updateData);
 
-        // 5. Redirect to the room's detail page with a success message
         return redirect()->route('rooms.show', $room)
             ->with('success_header', 'Kambarys sėkmingai atnaujintas!')
             ->with('success', 'Kambarys ' . $room->roomNumber . ' sėkmingai atnaujintas!');

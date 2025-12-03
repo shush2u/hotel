@@ -6,6 +6,7 @@ use App\Enums\RoomType; // Import the Enum
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class Room extends Model
 {
@@ -22,11 +23,27 @@ class Room extends Model
     ];
 
     protected $casts = [
-        'roomType' => RoomType::class, // Cast to Enum
+        'roomType' => RoomType::class,
         'costPerNight' => 'decimal:2',
         'tv' => 'boolean',
         'wifi' => 'boolean',
     ];
+
+    public function getPhotoAttribute($value)
+    {
+        $blob = $this->getRawOriginal('photo');
+
+        if (!$blob) {
+            return null;
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime  = finfo_buffer($finfo, $blob);
+
+        $base64 = base64_encode($blob);
+
+        return "data:$mime;base64,$base64";
+    }
 
     /**
      * Get the bookings for the room.

@@ -20,7 +20,7 @@
             </div>
 
             <!-- Form for Room Creation -->
-            <form method="POST" action="{{ route('rooms.store') }}" class="space-y-6">
+            <form method="POST" action="{{ route('rooms.store') }}" class="space-y-6" enctype="multipart/form-data">
                 @csrf
 
                 <!-- Grid for primary details -->

@@ -110,7 +110,7 @@ $currentType = old('roomType', $room->roomType->value);
                     @if ($room->photo)
                         <div class="mt-4">
                             <p class="text-sm font-medium text-neutral-700 mb-2">Dabartinė nuotrauka:</p>
-                            <img src="{{ Storage::url($room->photo) }}" alt="Current Room Photo"
+                            <img src="{{ $room->photo }}" alt="Current Room Photo"
                                 class="h-32 w-32 object-cover rounded-md shadow-md">
                         </div>
                     @endif
