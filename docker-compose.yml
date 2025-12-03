@@ -20,7 +20,7 @@ services:
 
   app:
     build:
-      context: ./laravel/
+      context: .
     container_name: hotel-app
     volumes:
       - .:/var/www/html
